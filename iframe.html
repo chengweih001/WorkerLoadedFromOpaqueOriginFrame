@@ -1,0 +1,21 @@
+This is a Sanboxed iframe!
+
+<script>
+  function objectUrlFromScript(script) {
+    const blob = new Blob([script], { type: "text/javascript" });
+    return URL.createObjectURL(blob);
+  }
+
+  // I had to use blob url in order to avoid error below:
+  // ---------------------------------------
+  // iframe.html:19 Uncaught DOMException: Failed to construct 'Worker': Script at 'https://to3nds.csb.app/worker.js' cannot be accessed from origin 'null'.
+  // at https://to3nds.csb.app/iframe.html:19:16
+  // ---------------------------------------
+  var scriptText =
+    "console.log('[DEBUG worker] isSecureContext:', isSecureContext);";
+  var scriptURL = objectUrlFromScript(scriptText);
+
+  console.log("[DEBUG iframe] isSecureContext:", isSecureContext);
+  let worker = new Worker(scriptURL);
+  // let worker = new Worker("worker.js");
+</script>
